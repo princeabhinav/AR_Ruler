@@ -1,0 +1,1 @@
+include ':app', ':mylibrary', ':ar_ruler', ':mylibrary2', ':ar_ruler2', ':ar_rule', ':ar_library'
