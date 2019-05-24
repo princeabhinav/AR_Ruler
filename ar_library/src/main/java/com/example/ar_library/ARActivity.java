@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.ar.core.Anchor;
@@ -37,18 +38,26 @@ public class ARActivity {
     public String units = "in";
 
     //this function takes time information for the current frame and then stores the co-ordinates of frame into a list.
-    public void onUpdateFrame(FrameTime frameTime){
+   /* private void onUpdateFrame(FrameTime frameTime){
         if (fragment.getArSceneView().getScene() == null){
             return;
         }
+
         Frame frame = fragment.getArSceneView().getArFrame();
         List<HitResult> hr = frame.hitTest(fragment.getView().getPivotX(), fragment.getView().getPivotY());
 
-        //Setting the world space rotation of all the nodes based on base type nodes but can be changed in terms of positon and scaling and rotation
+        if (hr.isEmpty()){
+            updateTargetColor(android.graphics.Color.RED);
+        }
+        else {
+            updateTargetColor(android.graphics.Color.GREEN);
+        }
+
         for (Node node: viewRenderableList){
             updateOrientationTowardsCamera(node);
         }
-    }
+    }*/
+
     //checks if the size of the anchorlist is greater than 2 then it call the distanceBetweenAnchors function and midpos function, also passes the value of one node from the list at a time.
     public void calculateDistance(){
         if (anchorList.size() >= 2) {
@@ -82,15 +91,20 @@ public class ARActivity {
 
 
 
-    public void addDistanceText(ViewRenderable renderable, float distance, Vector3 worldPos){
-
-
+   /* private void addDistanceText(ViewRenderable renderable, float distance, Vector3 worldPos){
+        TextView txt = (TextView) renderable.getView().findViewById(R.id.planetInfoCard);
+        if (units.equals("cm")) {
+            txt.setText(String.format("%.2f", distance));
+        }
+        else{
+            txt.setText(cmToFeet(distance));
+        }
         Node node = new Node();
         node.setRenderable(renderable);
         node.setWorldPosition(worldPos);
         fragment.getArSceneView().getScene().addChild(node);
         viewRenderableList.add(node);
-    }
+    }*/
 
 
     //
