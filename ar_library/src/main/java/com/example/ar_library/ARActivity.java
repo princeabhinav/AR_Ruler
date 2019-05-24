@@ -24,33 +24,33 @@ import com.google.ar.sceneform.ux.ArFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ARActivity  {
+public class ARActivity {
 
-    private CustomArFragment fragment;
-    private ModelRenderable redSphereRenderable;
+    public CustomArFragment fragment;
+    public ModelRenderable redSphereRenderable;
 
-    private List<AnchorNode> anchorList = new ArrayList<>();
-    private List<Node> viewRenderableList = new ArrayList<>();
-    private String units = "in";
+    //these nodes stay positioned in the same place relative to the real world
+    public List<AnchorNode> anchorList = new ArrayList<>();
 
+    //these are based on the base type node but can be changed in terms of position scaling and rotation
+    public List<Node> viewRenderableList = new ArrayList<>();
+    public String units = "in";
 
-    private void onUpdateFrame(FrameTime frameTime){
+    //this function takes time information for the current frame and then stores the co-ordinates of frame into a list.
+    public void onUpdateFrame(FrameTime frameTime){
         if (fragment.getArSceneView().getScene() == null){
             return;
         }
-
         Frame frame = fragment.getArSceneView().getArFrame();
         List<HitResult> hr = frame.hitTest(fragment.getView().getPivotX(), fragment.getView().getPivotY());
 
-
-
+        //Setting the world space rotation of all the nodes based on base type nodes but can be changed in terms of positon and scaling and rotation
         for (Node node: viewRenderableList){
             updateOrientationTowardsCamera(node);
         }
     }
-
-
-    private void calculateDistance(){
+    //checks if the size of the anchorlist is greater than 2 then it call the distanceBetweenAnchors function and midpos function, also passes the value of one node from the list at a time.
+    public void calculateDistance(){
         if (anchorList.size() >= 2) {
             float distance = distanceBetweenAnchors(anchorList.get(anchorList.size() - 1).getAnchor(), anchorList.get(anchorList.size() - 2).getAnchor());
             Vector3 midPos = midPosBetweenAnchors(anchorList.get(anchorList.size() - 1).getAnchor(), anchorList.get(anchorList.size() - 2).getAnchor());
@@ -60,8 +60,8 @@ public class ARActivity  {
 //            makeLineRenderable(startNode, endNode, distance, midPos);
         }
     }
-
-    private float distanceBetweenAnchors(Anchor start, Anchor end){
+    //takes the value of the anchor node and find the distance between them using distance formula.
+    public float distanceBetweenAnchors(Anchor start, Anchor end){
         Pose startPose = start.getPose();
         Pose endPose = end.getPose();
 
@@ -75,14 +75,14 @@ public class ARActivity  {
         return distanceMeters;
     }
 
-    private Vector3 midPosBetweenAnchors(Anchor start, Anchor end){
+    public Vector3 midPosBetweenAnchors(Anchor start, Anchor end){
         return Vector3.add(new AnchorNode(start).getWorldPosition(),
                 new AnchorNode(end).getWorldPosition()).scaled(0.5f);
     }
 
 
 
-    private void addDistanceText(ViewRenderable renderable, float distance, Vector3 worldPos){
+    public void addDistanceText(ViewRenderable renderable, float distance, Vector3 worldPos){
 
 
         Node node = new Node();
@@ -94,7 +94,7 @@ public class ARActivity  {
 
 
 
-    private void addLine(ModelRenderable renderable, AnchorNode start, AnchorNode end, Vector3 worldPos){
+    public void addLine(ModelRenderable renderable, AnchorNode start, AnchorNode end, Vector3 worldPos){
         Node node = new Node();
         node.setRenderable(renderable);
         node.setWorldPosition(worldPos);
@@ -106,7 +106,7 @@ public class ARActivity  {
         fragment.getArSceneView().getScene().addChild(node);
     }
 
-    private void updateOrientationTowardsCamera(Node node){
+    public void updateOrientationTowardsCamera(Node node){
         Vector3 cameraPosition = fragment.getArSceneView().getScene().getCamera().getWorldPosition();
         Vector3 cardPosition = node.getWorldPosition();
         Vector3 direction = Vector3.subtract(cameraPosition, cardPosition);
@@ -114,13 +114,13 @@ public class ARActivity  {
         node.setWorldRotation(lookRotation);
     }
 
-    private void addNodeToScene(ArFragment fragment, Anchor anchor, Renderable renderable){
+    public void addNodeToScene(ArFragment fragment, Anchor anchor, Renderable renderable){
         AnchorNode anchorNode = new AnchorNode(anchor);
         anchorNode.setRenderable(renderable);
         anchorList.add(anchorNode);
         fragment.getArSceneView().getScene().addChild(anchorNode);
     }
-
+    //this function takes values in cm and convert them into feet and return the changed values in feet if feet value is 0 it returns result into inches.
     static String cmToFeet(float centi)
     {
         int feet = (int) (0.0328 * centi);
@@ -130,8 +130,8 @@ public class ARActivity  {
         }
         return (Integer.toString(feet) + "ft" + String.format("%.2f", inch) + "in");
     }
-
-    private void clearAllNodes() {
+    //this function removes all the nodes which are the object of AnchorNodes and make a new viewRenderable list and AnchorNode list.
+    public void clearAllNodes() {
         List<Node> children = new ArrayList<>(fragment.getArSceneView().getScene().getChildren());
         for (Node node : children) {
             if (node instanceof AnchorNode) {
@@ -146,6 +146,7 @@ public class ARActivity  {
             anchorList = new ArrayList<>();
         }
     }
+    //just for checking
     public static void s(Context c, String message)
     {
         Toast.makeText(c,message,Toast.LENGTH_SHORT).show();
