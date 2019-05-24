@@ -69,12 +69,12 @@ public class ARActivity {
         float dy = startPose.ty() - endPose.ty();
         float dz = startPose.tz() - endPose.tz();
 
-        // Compute the straight-line distance.
+        //Compute the straight-line distance.
         float distanceMeters = (float) Math.sqrt(dx*dx + dy*dy + dz*dz);
         Log.e("distance cm", Float.toString(distanceMeters*100));
         return distanceMeters;
     }
-
+    //taking parameter as Anchor nodes and finding the mid position between them and then returning the mid-position.
     public Vector3 midPosBetweenAnchors(Anchor start, Anchor end){
         return Vector3.add(new AnchorNode(start).getWorldPosition(),
                 new AnchorNode(end).getWorldPosition()).scaled(0.5f);
@@ -93,7 +93,7 @@ public class ARActivity {
     }
 
 
-
+    //
     public void addLine(ModelRenderable renderable, AnchorNode start, AnchorNode end, Vector3 worldPos){
         Node node = new Node();
         node.setRenderable(renderable);
@@ -106,6 +106,7 @@ public class ARActivity {
         fragment.getArSceneView().getScene().addChild(node);
     }
 
+    //taking the changable node as parameter and then
     public void updateOrientationTowardsCamera(Node node){
         Vector3 cameraPosition = fragment.getArSceneView().getScene().getCamera().getWorldPosition();
         Vector3 cardPosition = node.getWorldPosition();
@@ -113,7 +114,7 @@ public class ARActivity {
         Quaternion lookRotation = Quaternion.lookRotation(direction, Vector3.up());
         node.setWorldRotation(lookRotation);
     }
-
+    //??
     public void addNodeToScene(ArFragment fragment, Anchor anchor, Renderable renderable){
         AnchorNode anchorNode = new AnchorNode(anchor);
         anchorNode.setRenderable(renderable);
@@ -121,7 +122,7 @@ public class ARActivity {
         fragment.getArSceneView().getScene().addChild(anchorNode);
     }
     //this function takes values in cm and convert them into feet and return the changed values in feet if feet value is 0 it returns result into inches.
-    static String cmToFeet(float centi)
+    public static String cmToFeet(float centi)
     {
         int feet = (int) (0.0328 * centi);
         double inch = (0.3937 * centi) - 12 * feet ;
